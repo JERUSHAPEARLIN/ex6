@@ -1,0 +1,59 @@
+class Student:
+    def __init__(self, student_id, name):
+        self.student_id = student_id
+        self.name = name
+        self.grades = {} 
+    def add_grade(self, category, grade):
+        self.grades[category] = grade
+    def calculate_final_grade(self):      
+        weights = {"Assignments": 0.4, "Midterm": 0.3, "Final Exam": 0.3}       
+        total_weight = 0
+        final_grade = 0        
+        for category, weight in weights.items():
+            if category in self.grades:
+                final_grade += self.grades[category] * weight
+                total_weight += weight
+        if total_weight == 1.0:
+            return final_grade
+        else:
+            return "Grades are incomplete, missing components"
+    def get_report(self):   
+        final_grade = self.calculate_final_grade()
+        letter_grade = self.convert_to_letter(final_grade)      
+        report = {
+            'Student ID': self.student_id,
+            'Name': self.name,
+            'Grades': self.grades,
+            'Final Grade': final_grade,
+            'Letter Grade': letter_grade
+        }
+        return report
+    def convert_to_letter(self, grade):
+        if isinstance(grade, str): # In case the grade is incomplete
+            return grade
+        if grade >= 90:
+            return 'A'
+        elif grade >= 80:
+            return 'B'
+        elif grade >= 70:
+            return 'C'
+        elif grade >= 60:
+            return 'D'
+        else:
+            return 'F'
+def main():   
+    student_id = input("Enter student ID: ")
+    student_name = input("Enter student name: ")
+    student = Student(student_id, student_name)     
+    assignments = float(input("Enter grade for Assignments (0-100): "))
+    midterm = float(input("Enter grade for Midterm (0-100): "))
+    final_exam = float(input("Enter grade for Final Exam (0-100): ")) 
+    student.add_grade("Assignments", assignments)
+    student.add_grade("Midterm", midterm)
+    student.add_grade("Final Exam", final_exam) 
+    report = student.get_report()
+    print("\nStudent Report:")
+    for key, value in report.items():
+        print(f"{key}: {value}")
+if __name__ == "__main__":
+    main()
